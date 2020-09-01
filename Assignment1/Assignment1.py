@@ -10,13 +10,12 @@ import random
 	#output:int/float/double/large
 
 def get_entropy_of_dataset(df):
-	entropy = 0
-	value, counts = np.unique(df.iloc[:,-1], return_counts=True)
-	norm_counts = counts / counts.sum()
-	base = 2
-	return -(norm_counts * np.log(norm_counts) / np.log(base)).sum()
-
-	# return entropy
+    entropy = 0
+    value, counts = np.unique(df.iloc[:,-1], return_counts=True)
+    norm_counts = counts / counts.sum()
+    base = 2
+    entropy = -(norm_counts * np.log(norm_counts) / np.log(base)).sum()
+    return entropy
 
 
 
@@ -24,14 +23,18 @@ def get_entropy_of_dataset(df):
 	#input:pandas_dataframe,str   {i.e the column name ,ex: Temperature in the Play tennis dataset}
 	#output:int/float/double/large
 def get_entropy_of_attribute(df,attribute):
-	entropy_of_attribute = 0
-	value, counts = np.unique(df[attribute], return_counts=True)
-	norm_counts = counts / counts.sum()
-	base = 2
-	print(-(norm_counts * np.log(norm_counts) / np.log(base)).sum())
-	return -(norm_counts * np.log(norm_counts) / np.log(base)).sum()
-
-	# return abs(entropy_of_attribute)
+    entropy_of_attribute = 0
+    value, counts = np.unique(df[attribute], return_counts=True)
+    norm_counts = counts / counts.sum()
+    base = 2
+    entropy = np.array([])
+    for i in range(0,len(value)):
+        split = df.loc[df[attribute] == value[i]]
+        val, cnts = np.unique(split.iloc[:,-1], return_counts=True)
+        norm_cnts = cnts / cnts.sum()
+        entropy = np.append(entropy,-(norm_cnts * np.log(norm_cnts) / np.log(base)).sum())
+    entropy_of_attribute = (norm_counts * entropy).sum()
+    return abs(entropy_of_attribute)
 
 
 
