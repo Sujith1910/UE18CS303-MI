@@ -1,4 +1,4 @@
-from Assignment1.Assignment1 import *
+from Assignment1 import *
 
 def test_case():
     outlook = 'overcast,overcast,overcast,overcast,rainy,rainy,rainy,rainy,rainy,sunny,sunny,sunny,sunny,sunny'.split(',')

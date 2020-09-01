@@ -43,6 +43,9 @@ def get_entropy_of_attribute(df,attribute):
 	#output:int/float/double/large
 def get_information_gain(df,attribute):
 	information_gain = 0
+	entropy=get_entropy_of_dataset(df)
+	average_information=get_entropy_of_attribute(df,attribute)
+	information_gain=entropy-average_information
 	return information_gain
 
 
@@ -51,16 +54,23 @@ def get_information_gain(df,attribute):
 	#input: pandas_dataframe
 	#output: ({dict},'str')     
 def get_selected_attribute(df):
-   
-	information_gains={}
-	selected_column=''
 
 	'''
-	Return a tuple with the first element as a dictionary which has IG of all columns 
+	Return a tuple with the first element as a dictionary which has IG of all columns
 	and the second element as a string with the name of the column selected
 
 	example : ({'A':0.123,'B':0.768,'C':1.23} , 'C')
 	'''
+
+	information_gains={}
+	selected_column=''
+	for attribute in df.columns[:-1]:
+		information_gains[attribute]=get_information_gain(df,attribute)
+
+	for attribute,information_gain in information_gains.items():
+		if information_gain==max(information_gains.values()):
+			selected_column=attribute
+
 
 	return (information_gains,selected_column)
 
