@@ -70,6 +70,7 @@ def get_selected_attribute(df):
 	for attribute in df.columns:
 		if information_gains[attribute]==max(information_gains.values()):
 			selected_column=attribute
+			break
 
 
 	return (information_gains,selected_column)
