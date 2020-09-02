@@ -67,9 +67,10 @@ def get_selected_attribute(df):
 	for attribute in df.columns[:-1]:
 		information_gains[attribute]=get_information_gain(df,attribute)
 
-	for attribute,information_gain in information_gains.items():
-		if information_gain==max(information_gains.values()):
+	for attribute in df.columns:
+		if information_gains[attribute]==max(information_gains.values()):
 			selected_column=attribute
+			break
 
 
 	return (information_gains,selected_column)
