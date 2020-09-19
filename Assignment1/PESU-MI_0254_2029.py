@@ -17,7 +17,12 @@ def get_entropy_of_dataset(df):
     entropy = -(norm_counts * np.log(norm_counts) / np.log(base)).sum()
     return entropy
 
+'''
+Assignment1 code
+Team name: PES-MI_0254_2029
 
+
+'''
 
 '''Return entropy of the attribute provided as parameter'''
 	#input:pandas_dataframe,str   {i.e the column name ,ex: Temperature in the Play tennis dataset}
