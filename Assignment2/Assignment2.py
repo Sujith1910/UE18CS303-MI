@@ -25,31 +25,27 @@ NOTE : you are allowed to write other helper functions that you can call in the 
 def tri_Traversal(cost, heuristic, start_point, goals):
     l = []
 
-    # removes first row and column from cost array.
-    for row in cost:
-        row.remove(row[0])
-    cost.remove(cost[0])
-
-    stack=[start_point]
     t1=[start_point]
+    first=True
     visited=set()
 
     while t1:
         node=t1.pop()
+        if first==True:
+            t1.append(start_point)
+            first=False
         if node not in visited:
             visited.add(node)
             if node in goals:
                 t1.append(node)
                 break
-            for val in cost[node-1]:
+            for val in cost[node]:
                 if val>0:
-                    if cost[node-1].index(val)+1 in goals:
-                        t1.append(cost[node-1].index(val)+1)
+                    if cost[node].index(val) in goals:
+                        t1.append(cost[node].index(val))
                         break
-                    if cost[node-1].index(val)+1 not in visited:
-                        t1.append(cost[node-1].index(val)+1)
-
-
+                    if cost[node].index(val) not in visited:
+                        t1.append(cost[node].index(val))
 
     print(t1)
     # t1 <= dfs traversal
