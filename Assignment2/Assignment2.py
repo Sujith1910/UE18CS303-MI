@@ -30,8 +30,8 @@ def tri_Traversal(cost, heuristic, start_point, goals):
         row.remove(row[0])
     cost.remove(cost[0])
 
+    stack=[start_point]
     t1=[start_point]
-
     visited=set()
 
     while t1:
@@ -40,12 +40,16 @@ def tri_Traversal(cost, heuristic, start_point, goals):
             visited.add(node)
             if node in goals:
                 t1.append(node)
-
                 break
             for val in cost[node-1]:
                 if val>0:
+                    if cost[node-1].index(val)+1 in goals:
+                        t1.append(cost[node-1].index(val)+1)
+                        break
                     if cost[node-1].index(val)+1 not in visited:
                         t1.append(cost[node-1].index(val)+1)
+
+
 
     print(t1)
     # t1 <= dfs traversal
@@ -56,3 +60,4 @@ def tri_Traversal(cost, heuristic, start_point, goals):
     l.append(t2)
     l.append(t3)
     return l
+
