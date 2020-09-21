@@ -1,24 +1,6 @@
-'''
-Function tri_Traversal - performs DFS, UCS and A* traversals and returns the path for each of these traversals
-
-n - Number of nodes in the graph
-m - Number of goals ( Can be more than 1)
-1<=m<=n
-Cost - Cost matrix for the graph of size (n+1)x(n+1)
-IMP : The 0th row and 0th column is not considered as the starting index is from 1 and not 0.
-Refer the sample test case to understand this better
-
-Heuristic - Heuristic list for the graph of size 'n+1'
-IMP : Ignore 0th index as nodes start from index value of 1
-Refer the sample test case to understand this better
-
-start_point - single start node
-goals - list of size 'm' containing 'm' goals to reach from start_point
-
-Return : A list containing a list of all traversals [[],[],[]]
-
-NOTE : you are allowed to write other helper functions that you can call in the given fucntion
-'''
+#Machine Intelligence Assignment 2
+#PES1201800254 Arsh Goyal
+#PES1201802029 Sujith K
 
 import sys
 
@@ -37,8 +19,8 @@ def pop_frontier_heu(frontier):
         elif key > min:
             break
 
-    max_values = sorted(max_values, key=lambda x: x[-1])
-    # max_values.sort()
+    #max_values = sorted(max_values, key=lambda x: x[-1])
+    max_values.sort()
     desired_value = max_values[0]
     for key,cost, path in frontier:
         if path == desired_value:
@@ -53,7 +35,6 @@ def get_frontier_params_new_heu(node, frontier):
         heu, cost, path = curr_tuple
         if path[-1] == node:
             return True, i, heu, cost, path
-
     return False, None, None, None, None
 
 
@@ -76,7 +57,6 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
         path_cost_till_now, path_till_now = pop_frontier_heu(frontier)    
         current_node = path_till_now[-1]    
         explored_nodes.append(current_node)    
-        #print("explored nodes are")
         #print(explored_nodes)
         #print(path_cost_till_now)
         #print(path_till_now)
@@ -88,10 +68,7 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
         neighbours = cost[current_node]    
     
         neighbours_list_int = [int(n) for n in neighbours]    
-        #neighbours_list_int.sort(reverse=False)    
-       # neighbours_list_str = [str(n) for n in neighbours_list_int]    
         #print(neighbours_list_int)
-        
         i =0
         
         for neighbour in neighbours_list_int:
@@ -105,24 +82,28 @@ def A_star_Traversal(cost, heuristic, start_point, goals):
                 heuristic_cost = neighbour_cost + heuristic[i]
                 #print(heuristic_cost)
         
-            
                 new_element = (heuristic_cost, neighbour_cost, path_to_neighbour) 
                 #print(new_element)
     
-                
-                is_there, indexx, neighbour_old_hue, neighbour_old_cost, _ = get_frontier_params_new_heu(i, frontier)    
+                is_there, indexx, neighbour_old_heu, neighbour_old_cost, path1 = get_frontier_params_new_heu(i, frontier)    
         
                 if (i not in explored_nodes) and not is_there:    
                     frontier.append(new_element)   
                 elif is_there:    
-                    if neighbour_old_hue > heuristic_cost:    
+                    if neighbour_old_heu > heuristic_cost:    
                         frontier.pop(indexx)    
                         frontier.append(new_element)
+                    
+                    elif neighbour_old_heu == heuristic_cost:
+                        if path1[1] > path_to_neighbour[1]:
+                            frontier.pop(indexx)
+                            frontier.append(new_element)
+                    
                 #print(frontier)
             
             i+=1
     
-    return None 
+    return [] 
 
 
 def pop_frontier(frontier):
@@ -138,8 +119,8 @@ def pop_frontier(frontier):
             max_values.clear()
             max_values.append(path)
 
-    max_values = sorted(max_values, key=lambda x: x[-1])
-    # max_values.sort()
+    #max_values = sorted(max_values, key=lambda x: x[-1])
+    max_values.sort()
     desired_value = max_values[0]
     frontier.remove((min, max_values[0]))
     return min, desired_value
@@ -151,13 +132,11 @@ def get_frontier_params_new(node, frontier):
         cost, path = curr_tuple
         if path[-1] == node:
             return True, i, cost, path
-
     return False, None, None, None
 
 
 
 def UCS_Traversal(cost, start_point, goals):
-    l = []
     path = []    
     explored_nodes = list()    
   
@@ -175,7 +154,7 @@ def UCS_Traversal(cost, start_point, goals):
         path_cost_till_now, path_till_now = pop_frontier(frontier)    
         current_node = path_till_now[-1]    
         explored_nodes.append(current_node)    
-       # print("explored nodes are")
+        #print("explored nodes are")
         #print(explored_nodes)
         
         for i in goals:
@@ -185,10 +164,9 @@ def UCS_Traversal(cost, start_point, goals):
         neighbours = cost[current_node]    
     
         neighbours_list_int = [int(n) for n in neighbours]    
-        #neighbours_list_int.sort(reverse=False)    
-        #neighbours_list_str = [str(n) for n in neighbours_list_int]    
-        #print(neighbours_list_str)
+        #print(neighbours_list_int)
         i =0
+        
         for neighbour in neighbours_list_int:
             if(neighbour > 0):              
                 path_to_neighbour = path_till_now.copy()  
@@ -200,21 +178,23 @@ def UCS_Traversal(cost, start_point, goals):
                 new_element = (neighbour_cost, path_to_neighbour) 
                 #print(new_element)
                 
-                is_there, indexx, neighbour_old_cost, _ = get_frontier_params_new(i, frontier)    
-        
+                is_there, indexx, neighbour_old_cost, path1 = get_frontier_params_new(i, frontier)    
+                #print(path1)
                 if (i not in explored_nodes) and not is_there:    
                     frontier.append(new_element)   
                 elif is_there:    
                     if neighbour_old_cost > neighbour_cost:    
                         frontier.pop(indexx)    
                         frontier.append(new_element)
+                    
+                    elif neighbour_old_cost == neighbour_cost:
+                        if path1[1] > path_to_neighbour[1]:
+                            frontier.pop(indexx)
+                            frontier.append(new_element)
+                    
                 #print(frontier)
-            i+=1
-    
-    return None
-
-    return l
-
+            i+=1   
+    return []
 
 def dfs_recursive(node, cost, goals, visited):
     if node in goals:
@@ -238,7 +218,10 @@ test file is passing. we could have tried bfs also.
 def DFS_Traversal(cost, start_point, goals):
     visited = [False for i in range(len(cost))]
     result = dfs_recursive(start_point, cost, goals, visited)
-    return result
+    if result is not None:
+        return result
+    else:
+        return []
 
 
 def tri_Traversal(cost, heuristic, start_point, goals):
