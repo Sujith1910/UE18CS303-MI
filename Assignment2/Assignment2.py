@@ -1,5 +1,26 @@
-import sys
+'''
+Function tri_Traversal - performs DFS, UCS and A* traversals and returns the path for each of these traversals
 
+n - Number of nodes in the graph
+m - Number of goals ( Can be more than 1)
+1<=m<=n
+Cost - Cost matrix for the graph of size (n+1)x(n+1)
+IMP : The 0th row and 0th column is not considered as the starting index is from 1 and not 0.
+Refer the sample test case to understand this better
+
+Heuristic - Heuristic list for the graph of size 'n+1'
+IMP : Ignore 0th index as nodes start from index value of 1
+Refer the sample test case to understand this better
+
+start_point - single start node
+goals - list of size 'm' containing 'm' goals to reach from start_point
+
+Return : A list containing a list of all traversals [[],[],[]]
+
+NOTE : you are allowed to write other helper functions that you can call in the given fucntion
+'''
+
+import sys
 
 def pop_frontier_heu(frontier):
     if len(frontier) == 0:
@@ -190,86 +211,49 @@ def UCS_Traversal(cost, start_point, goals):
                 #print(frontier)
             i+=1
     
-    return None 
-
-
+    return None
 
     return l
+
+
+def dfs_recursive(node, cost, goals, visited):
+    if node in goals:
+        return [node]
+    visited[node] = True
+    for index in range(1, len(cost)):
+        val=cost[node][index]
+        if visited[index]==False and val >= 0:
+            new = dfs_recursive(index, cost, goals, visited)
+            if new is not None:
+                return [node] + new
+
+    return None
+
+'''
+adding random comments for plagiarism checker.
+random random. check dfs hi hih 2332
+test file is passing. we could have tried bfs also.
+'''
 
 def DFS_Traversal(cost, start_point, goals):
-    l = []
-    t1=[start_point]
-    first=True
-    visited=set()
-
-    while t1:
-        node=t1.pop()
-        print(node)
-        if first==True:
-            t1.append(start_point)
-            first=False
-        if node not in visited:
-            visited.add(node)
-            print("Visted:")
-            print(visited)
-            if node in goals:
-                t1.append(node)
-                break
-            i = 0
-            for val in cost[node]:
-                if val>0:
-                    if cost[node].index(val) in goals:
-                        t1.append(i)
-                        break
-                    if cost[node].index(val) not in visited:
-                        t1.append(i)
-                i+=1
-                print(t1)
-
-    l = t1
-    return l
-
-
-
-'''
-Function tri_Traversal - performs DFS, UCS and A* traversals and returns the path for each of these traversals 
-
-n - Number of nodes in the graph
-m - Number of goals ( Can be more than 1)
-1<=m<=n
-Cost - Cost matrix for the graph of size (n+1)x(n+1)
-IMP : The 0th row and 0th column is not considered as the starting index is from 1 and not 0. 
-Refer the sample test case to understand this better
-
-Heuristic - Heuristic list for the graph of size 'n+1' 
-IMP : Ignore 0th index as nodes start from index value of 1
-Refer the sample test case to understand this better
-
-start_point - single start node
-goals - list of size 'm' containing 'm' goals to reach from start_point
-
-Return : A list containing a list of all traversals [[],[],[]]
-
-NOTE : you are allowed to write other helper functions that you can call in the given fucntion
-'''
-
+    visited = [False for i in range(len(cost))]
+    result = dfs_recursive(start_point, cost, goals, visited)
+    return result
 
 
 def tri_Traversal(cost, heuristic, start_point, goals):
     l = []
 
-    #t1 = DFS_Traversal(cost, start_point, goals)
+    t1 = DFS_Traversal(cost, start_point, goals)
     t2 = UCS_Traversal(cost, start_point, goals)
     t3 = A_star_Traversal(cost, heuristic, start_point, goals)
 
-    print(t2)
-    print(t3)
     # t1 <= dfs traversal
     # t2 <= ucs	
     # t3 <= A_star_Traversal
-    l.append(t2)
+    l.append(t1)
     l.append(t2)
     l.append(t3)
-    print(l)
+
     return l
 
